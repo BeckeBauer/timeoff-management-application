@@ -81,6 +81,7 @@ Requirements git and docker
 ```bash
 git clone BeckeBauer/timeoff-management-application timeoff-management
 cd timeoff-management
+docker build -t BeckeBauer/timeoff-management-application .
 docker run -d -p 3000:3000 --name alpine_timeoff BeckeBauer/timeoff-management-application
 ```
 Open http://localhost:3000/ in your browser.
