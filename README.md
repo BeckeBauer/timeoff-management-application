@@ -76,7 +76,7 @@ Optionally allow employees to see the time off information of entire company reg
 
 Install TimeOff.Management application within your infrastructure:
 
-Requirements git and doker
+Requirements git and docker
 
 ```bash
 git clone BeckeBauer/timeoff-management-application timeoff-management
