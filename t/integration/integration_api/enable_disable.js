@@ -6,7 +6,6 @@ const
     By                = require('selenium-webdriver').By,
   expect              = require('chai').expect,
   Promise             = require("bluebird"),
-  rp                  = require('request-promise'),
   registerNewUserFunc = require('../../lib/register_new_user'),
   openPageFunc        = require('../../lib/open_page'),
   submitFormFunc      = require('../../lib/submit_form'),
@@ -65,20 +64,18 @@ describe('Enable/disable Integration APIs', function(){
       .findElement(By.css('input#token-value'))
       .then(el => el.getAttribute('value'))
       .then(v => Promise.resolve(oldToken=v))
-      .then(() => rp(`${applicationHost}integration/v1/report/absence`,{
+      .then(() => fetch(`${applicationHost}integration/v1/report/absence`,{
         method : 'GET',
-        body: '{}',
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${oldToken}`,
         },
       }))
-      .then(res => {throw new Error('TOM_TEST')})
-      .catch(error => {
-        expect(error).not.to.be.equal('TOM_TEST', 'Ensure contrl flow did not go beyond the "rp"');
-        expect(error.response.statusCode).to.be.equal(401, 'Ensure response code is correct');
+      .then(response => {
+        expect(response.status).to.be.equal(401, 'Ensure response code is correct');
         done();
       })
+      .catch(done);
   });
 
   it('Enable the API and repeate the invokation above: ensure that now it is successful', done => {
@@ -97,15 +94,14 @@ describe('Enable/disable Integration APIs', function(){
       should_be_successful: true,
       message: /Settings were saved/,
     }))
-    .then(() => rp(`${applicationHost}integration/v1/report/absence`,{
+    .then(() => fetch(`${applicationHost}integration/v1/report/absence`,{
       method : 'GET',
-      body: '{}',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${oldToken}`,
       },
     }))
-    .then(res => JSON.parse(res))
+    .then(res => res.json())
     .then(obj => {
       expect(obj[0].user.email).to.be.equal(email, 'Ensure that report conatins email of admin user');
       done();
@@ -131,32 +127,29 @@ describe('Enable/disable Integration APIs', function(){
   });
 
   it('Ensure that old API key is not valid anymore', done => {
-    rp(`${applicationHost}integration/v1/report/absence`,{
+    fetch(`${applicationHost}integration/v1/report/absence`,{
       method : 'GET',
-      body: '{}',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${oldToken}`,
       },
     })
-    .then(res => {throw new Error('TOM_TEST')})
-    .catch(error => {
-      expect(error).not.to.be.equal('TOM_TEST', 'Ensure contrl flow did not go beyond the "rp"');
-      expect(error.response.statusCode).to.be.equal(401, 'Ensure response code is correct');
+    .then(response => {
+      expect(response.status).to.be.equal(401, 'Ensure response code is correct');
       done();
-    });
+    })
+    .catch(done);
   });
 
   it('Ensure that newly renenerated API key works fine', done => {
-    rp(`${applicationHost}integration/v1/report/absence`,{
+    fetch(`${applicationHost}integration/v1/report/absence`,{
       method : 'GET',
-      body: '{}',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${newToken}`,
       },
     })
-    .then(res => JSON.parse(res))
+    .then(res => res.json())
     .then(obj => {
       expect(obj[0].user.email).to.be.equal(email, 'Ensure that report conatins email of admin user');
       done();
@@ -183,20 +176,18 @@ describe('Enable/disable Integration APIs', function(){
   });
 
   it('Ensure that API end points do not work anymore', done => {
-    rp(`${applicationHost}integration/v1/report/absence`,{
+    fetch(`${applicationHost}integration/v1/report/absence`,{
       method : 'GET',
-      body: '{}',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${newToken}`,
       },
     })
-    .then(res => {throw new Error('TOM_TEST')})
-    .catch(error => {
-      expect(error).not.to.be.equal('TOM_TEST', 'Ensure contrl flow did not go beyond the "rp"');
-      expect(error.response.statusCode).to.be.equal(401, 'Ensure response code is correct');
+    .then(response => {
+      expect(response.status).to.be.equal(401, 'Ensure response code is correct');
       done();
-    });
+    })
+    .catch(done);
   });
 
   after(function(done){

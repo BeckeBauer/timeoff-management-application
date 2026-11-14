@@ -3,8 +3,10 @@
 
 var expect  = require('chai').expect,
     _       = require('underscore'),
+    Promise = require('bluebird'),
     model   = require('../../../../lib/model/db'),
-    LeaveRequestParameters = require('../../../../lib/model/leave_request_parameters');
+    LeaveRequestParameters = require('../../../../lib/model/leave_request_parameters'),
+    LeaveCollectionUtil = require('../../../../lib/model/leave_collection')();
 
 describe('Check bug when type mismatch happenned', function(){
     var leave = model.Leave.build({
@@ -261,3 +263,76 @@ describe('Case when leave request is within one day', function(){
     });
 
 });
+
+describe('leave allowance deductions', function(){
+    it('does not count pending or rejected requests against allowance', function(){
+        var user = model.User.build();
+        user.cached_schedule = {};
+        user.my_leaves = [
+            leaveWithStatus(model.Leave.status_approved(), 3),
+            leaveWithStatus(model.Leave.status_new(), 2),
+            leaveWithStatus(model.Leave.status_rejected(), 4),
+        ];
+
+        expect(user.calculate_number_of_days_taken_from_allowance()).to.equal(3);
+    });
+
+    it('includes rejected requests in the user leave history query', function(){
+        var user = model.User.build(),
+            query;
+
+        user.promise_my_leaves = function(args){
+            query = args;
+            return Promise.resolve([]);
+        };
+
+        return user.promise_my_active_leaves_ever().then(function(){
+            expect(query.filter_status).to.include(model.Leave.status_rejected());
+        });
+    });
+
+    it('does not include rejected leave in the displayed deduction total', async function(){
+        var approved = leaveForGrouping({
+                approved: true,
+                days: 3,
+            }),
+            rejected = leaveForGrouping({
+                approved: false,
+                days: 5,
+            }),
+            grouped = await LeaveCollectionUtil.promise_to_group_leaves([
+                approved,
+                rejected,
+            ]);
+
+        expect(grouped[0].leaves).to.have.length(2);
+        expect(grouped[0].total_deduction).to.equal(3);
+    });
+});
+
+function leaveWithStatus(status, deductedDays) {
+    var leave = model.Leave.build({status: status});
+    leave.user = {};
+    leave.get_deducted_days_number = function(){
+        return deductedDays;
+    };
+
+    return leave;
+}
+
+function leaveForGrouping(args) {
+    return {
+        get_start_leave_day: function(){
+            return {date: '2026-01-15'};
+        },
+        is_new_leave: function(){
+            return false;
+        },
+        is_approved_leave: function(){
+            return args.approved;
+        },
+        get_deducted_days_number: function(){
+            return args.days;
+        },
+    };
+}

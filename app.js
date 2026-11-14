@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var moment       = require('moment');
 const createSessionMiddleware = require('./lib/middleware/withSession');
+const handlebarsRuntimeOptions = require('./lib/view/handlebars_runtime_options');
 
 var app = express();
 
@@ -16,6 +17,7 @@ var handlebars = require('express-handlebars')
     defaultLayout : 'main',
     extname       : '.hbs',
     helpers       : require('./lib/view/helpers')(),
+    runtimeOptions: handlebarsRuntimeOptions,
   });
 
 app.engine('.hbs', handlebars.engine);

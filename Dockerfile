@@ -3,46 +3,43 @@
 #
 # Instructions:
 # =============
-# 1. Create an empty directory and copy this file into it.
+# 1. From the project root, build the image:
 #
-# 2. Create image with: 
-#	docker build --tag timeoff:latest .
+#	docker build --tag BeckeBauer/timeoff-management-application .
 #
-# 3. Run with: 
-#	docker run -d -p 3000:3000 --name alpine_timeoff timeoff
+# 2. Run the container:
 #
-# 4. Login to running container (to update config (vi config/app.json): 
+#	docker run -d -p 3000:3000 --name alpine_timeoff BeckeBauer/timeoff-management-application
+#
+# 3. Login to the running container:
+#
 #	docker exec -ti --user root alpine_timeoff /bin/sh
 # --------------------------------------------------------------------
-FROM alpine:latest as dependencies
+FROM node:22-alpine AS dependencies
 
-RUN apk add --no-cache \
-    nodejs npm python3 build-base sqlite py3-pip py3-setuptools
+RUN apk add --no-cache python3 make g++ sqlite
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+FROM node:22-alpine
 
 
-COPY package.json  .
-RUN npm install 
-
-FROM alpine:latest
-
-
-ARG USERID
+ARG USERID=10001
 
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.docker.cmd="docker run -d -p 3000:3000 --name alpine_timeoff"
 
-RUN apk add --no-cache \
-    nodejs npm \
-    vim
+RUN apk add --no-cache vim
 
-RUN adduser --system timeoff-app --home /app --uid $USERID
-USER timeoff-app
+RUN adduser -D -h /app -u "$USERID" timeoff-app
 WORKDIR /app
-COPY . /app
-COPY --from=dependencies node_modules ./node_modules
+COPY --from=dependencies --chown=timeoff-app:timeoff-app /app/node_modules ./node_modules
+COPY --chown=timeoff-app:timeoff-app . /app
  
 
 
-CMD npm start
+CMD ["npm", "start"]
 
 EXPOSE 3000

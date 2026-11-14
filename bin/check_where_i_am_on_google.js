@@ -4,10 +4,18 @@
 
 'use strict';
 
+const { parseArgs } = require('node:util');
+const { values } = parseArgs({
+    options: {
+        domain: { type: 'string' },
+        query: { type: 'string' },
+    },
+    strict: false,
+});
+
 var
-    optimist = require('optimist').argv,
-    search_query    = optimist.query  || 'time off manager',
-    web_site_domain = optimist.domain || 'timeoffmanager.com',
+    search_query    = values.query  || 'time off manager',
+    web_site_domain = values.domain || 'timeoffmanager.com',
     stop_on_first   = true;
 
 console.log('-----------------------------------');
