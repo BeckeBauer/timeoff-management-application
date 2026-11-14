@@ -1,5 +1,13 @@
 
 $(document).ready(function () {
+  $('#input_country').on('change', function(){
+    const isGermany = $(this).val() === 'DE';
+    $('#company_region_group').toggle(isGermany);
+    if (!isGermany) {
+      $('#input_region').val('');
+    }
+  });
+
   $('button.leavetype-remove-btn').on('click', function(e){
 
     e.stopPropagation();

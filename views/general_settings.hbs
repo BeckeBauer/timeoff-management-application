@@ -37,6 +37,19 @@
                   </select>
                 </div>
               </div>
+              {{#if country_regions}}
+              <div class="form-group" id="company_region_group">
+                <label for="input_region" class="col-md-4 control-label">German state</label>
+                <div class="col-md-8">
+                  <select class="form-control" id="input_region" name="region">
+                    <option value="">Country-wide holidays only</option>
+                    {{#each country_regions}}
+                    <option value="{{@key}}" {{#if_equal @key ../company.region}}selected="selected"{{/if_equal}}>{{this.name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+              {{/if}}
               <div class="form-group">
                 <label for="input_date_format" class="col-md-4 control-label">Date format</label>
                 <div class="col-md-8">
