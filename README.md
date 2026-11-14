@@ -72,55 +72,18 @@ Optionally allow employees to see the time off information of entire company reg
 
 ## Installation
 
-### Cloud hosting
-
-Visit http://timeoff.management/
-
-Create company account and use cloud based version.
-
 ### Self hosting
 
 Install TimeOff.Management application within your infrastructure:
 
-(make sure you have Node.js (>=4.0.0) and SQLite installed)
+Requirements git and doker
 
 ```bash
-git clone https://github.com/timeoff-management/application.git timeoff-management
+git clone BeckeBauer/timeoff-management-application timeoff-management
 cd timeoff-management
-npm install
-npm start
+docker run -d -p 3000:3000 --name alpine_timeoff BeckeBauer/timeoff-management-application
 ```
 Open http://localhost:3000/ in your browser.
-
-## Run tests
-
-We have quite a wide test coverage, to make sure that the main user paths work as expected.
-
-Please run them frequently while developing the project.
-
-Make sure you have Chrome driver installed in your path and Chrome browser for your platform.
-
-If you want to see the browser execute the interactions prefix with `SHOW_CHROME=1`
-
-```bash
-USE_CHROME=1 npm test
-```
-
-(make sure that application with default settings is up and running)
-
-Any bug fixes or enhancements should have good test coverage to get them into "master" branch.
-
-## Updating existing instance with new code
-
-In case one needs to patch existing instance of TimeOff.Managenent application with new version:
-
-```bash
-git fetch
-git pull origin master
-npm install
-npm run-script db-update
-npm start
-```
 
 ## How to?
 
@@ -152,8 +115,4 @@ flag to be `true` in the `config/app.json` file.
 ## Use Redis as a sessions storage
 
 Follow instructions on [this page](docs/SessionStoreInRedis.md).
-
-## Feedback
-
-Please report any issues or feedback to <a href="https://twitter.com/FreeTimeOffApp">twitter</a> or Email: pavlo at timeoff.management
 
