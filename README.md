@@ -43,8 +43,9 @@ There are following types of users: employees, supervisors, and administrators.
 
 Optional LDAP authentication: configure application to use your LDAP server for user authentication.
 
-The interface is available in English and German. Users can select their preferred
-language in the navigation bar; the preference is saved with the user account.
+The interface is available in English, German, and Korean. The initial language
+is selected from the browser's preferred languages when supported. Users can
+change it from the navigation bar; their choice is saved with the user account.
 Run `npm run db-update` after upgrading to apply the database migration.
 
 **Ability to extract leave data into CSV**

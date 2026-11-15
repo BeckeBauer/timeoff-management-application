@@ -67,5 +67,23 @@ describe('Check Email', function(){
       expect(rendered_email.subject).to.equal('E-Mail-Betreff hier einfügen');
     });
   });
+
+  it('renders emails in Korean for Korean-preferring recipients', function(){
+    var email = new Email();
+
+    return email.promise_rendered_email_template({
+      template_name: 'foobar',
+      context: {
+        user: {
+          name: 'Mina',
+          preferred_language: 'ko',
+          reload_with_session_details: function(){ return bluebird.resolve(1); },
+        },
+      },
+    }).then(function(rendered_email){
+      expect(rendered_email.subject).to.equal('이메일 제목');
+      expect(rendered_email.body).to.match(/안녕하세요 Mina\./);
+    });
+  });
 });
 

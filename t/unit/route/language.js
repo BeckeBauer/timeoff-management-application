@@ -27,6 +27,16 @@ describe('Language preference route', function(){
     expect(req.session.language_selected).to.equal(true);
   });
 
+  it('accepts Korean as a supported selection', async function(){
+    const req = {
+      body: {language: 'ko', return_to: '/login/'},
+      session: {},
+    };
+
+    expect(await submitLanguage(req)).to.eql([303, '/login/']);
+    expect(req.session.language).to.equal('ko');
+  });
+
   it('persists the selected language for a signed-in user', async function(){
     const updates = [];
     const messages = [];

@@ -5,11 +5,19 @@ const i18n = require('../../lib/i18n');
 const handlebarsEngine = require('../../lib/view/handlebars_engine');
 const viewHelpers = require('../../lib/view/helpers')();
 
-describe('German localization', function(){
+describe('Localization', function(){
   it('falls back to English for unsupported languages and translates German text', function(){
     expect(i18n.normalizeLanguage('fr')).to.equal('en');
+    expect(i18n.normalizeLanguage('ko')).to.equal('ko');
     expect(i18n.translate('Calendar', 'fr')).to.equal('Calendar');
     expect(i18n.translate('Calendar', 'de')).to.equal('Kalender');
+    expect(i18n.translate('Calendar', 'ko')).to.equal('캘린더');
+  });
+
+  it('detects supported browser languages by preference', function(){
+    expect(i18n.detectBrowserLanguage('ko-KR,ko;q=0.9,en-US;q=0.8')).to.equal('ko');
+    expect(i18n.detectBrowserLanguage('fr-CA, de;q=0.7')).to.equal('de');
+    expect(i18n.detectBrowserLanguage('fr;q=1, ko;q=0')).to.equal('en');
   });
 
   it('translates email subject and body while preserving the subject separator', function(){

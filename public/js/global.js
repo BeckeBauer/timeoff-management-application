@@ -78,28 +78,64 @@ $(document).ready(function(){
     format      : "dd.mm.yyyy"
   }
 
+  a.fn.datepicker.dates.ko = {
+    days : [
+      "일요일","월요일","화요일","수요일","목요일","금요일","토요일"
+    ],
+    daysShort : [
+      "일","월","화","수","목","금","토"
+    ],
+    daysMin : [
+      "일","월","화","수","목","금","토"
+    ],
+    months : [
+      "1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"
+    ],
+    monthsShort : [
+      "1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"
+    ],
+    today       : "오늘",
+    monthsTitle : "월",
+    clear       : "지우기",
+    weekStart   : 0,
+    format      : "yyyy.mm.dd"
+  }
+
   a.fn.datepicker.defaults.language =
-    document.documentElement.lang === 'de' ? 'de' : 'en-GB';
+    document.documentElement.lang === 'de'
+      ? 'de'
+      : (document.documentElement.lang === 'ko' ? 'ko' : 'en-GB');
 }(jQuery);
 
 var translateUiText = function(text) {
-  if (document.documentElement.lang !== 'de') {
-    return text;
-  }
-
   var translations = {
-    'Employee summary': 'Mitarbeiterübersicht',
-    'Leave summary': 'Abwesenheitsübersicht',
-    'Loading...': 'Wird geladen...',
-    'No notifications': 'Keine Benachrichtigungen',
+    de: {
+      'Employee summary': 'Mitarbeiterübersicht',
+      'Leave summary': 'Abwesenheitsübersicht',
+      'Loading...': 'Wird geladen...',
+      'No notifications': 'Keine Benachrichtigungen',
+    },
+    ko: {
+      'Employee summary': '직원 요약',
+      'Leave summary': '휴가 요약',
+      'Loading...': '불러오는 중...',
+      'No notifications': '알림이 없습니다.',
+    },
   };
 
-  return translations[text] || text;
+  var language = document.documentElement.lang;
+  return (translations[language] && translations[language][text]) || text;
 };
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
+$(function () {
+  $('#language_selector').on('change', function() {
+    this.form.submit();
+  });
+});
 
 $(function () {
   $('[data-toggle="popover"]').popover()

@@ -54,6 +54,10 @@ app.use(passport.session());
 // Make sure session and user objects are available in templates
 app.use(function(req,res,next){
 
+  if (!req.user && !req.session.language) {
+    req.session.language = i18n.detectBrowserLanguage(req.get('accept-language'));
+  }
+
   // Get today given user's timezone
   var today;
 
