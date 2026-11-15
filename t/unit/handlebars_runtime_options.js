@@ -4,8 +4,23 @@ const expect = require('chai').expect;
 const Handlebars = require('handlebars');
 const fs = require('fs');
 const runtimeOptions = require('../../lib/view/handlebars_runtime_options');
+const viewHelpers = require('../../lib/view/helpers')();
 
 describe('Handlebars model access', function(){
+  it('renders dates from model getters in bank holiday rows', function(){
+    class BankHoliday {
+      get date() { return new Date('2026-06-04T00:00:00.000Z'); }
+    }
+
+    const template = Handlebars.compile('{{as_date bankHoliday.date}}');
+    const rendered = template(
+      {bankHoliday: new BankHoliday()},
+      {...runtimeOptions, helpers: viewHelpers}
+    );
+
+    expect(rendered).to.equal('2026-06-04');
+  });
+
   it('renders the explicitly allowed model getters and methods', function(){
     class Allowance {
       get carry_over() { return 1; }
