@@ -1,0 +1,26 @@
+{{#if calendar_legend.show}}
+<div class="row calendar-legend">
+  <div class="col-md-12">
+    {{#if calendar_legend.has_public_holidays}}
+    <span class="calendar-legend-item">
+      <span class="calendar-legend-swatch public-holiday" aria-hidden="true"></span>
+      <span>Public holidays</span>
+    </span>
+    {{/if}}
+    {{#if calendar_legend.show_absences}}
+      {{#each calendar_legend.absence_types}}
+      <span class="calendar-legend-item">
+        <span class="calendar-legend-swatch {{color_class}}" aria-hidden="true"></span>
+        <span>{{name}}</span>
+      </span>
+      {{/each}}
+      {{#if calendar_legend.has_pending_absences}}
+      <span class="calendar-legend-item">
+        <span class="calendar-legend-swatch pending-absence" aria-hidden="true"></span>
+        <span>Pending absence</span>
+      </span>
+      {{/if}}
+    {{/if}}
+  </div>
+</div>
+{{/if}}

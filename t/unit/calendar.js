@@ -92,12 +92,12 @@ describe('Check calendar month object', function(){
         expect(mar.is_bank_holiday(10)).not.to.be.ok;
     });
 
-    it('Supports the day month year date format with spaces', function(){
-        var company = model.Company.build({date_format: 'DD MM YYYY'});
+    it('Supports the German day month year date format', function(){
+        var company = model.Company.build({date_format: 'DD.MM.YYYY'});
 
-        expect(company.get_available_date_formats()).to.include('DD MM YYYY');
-        expect(company.get_default_date_format_for_date_picker()).to.equal('dd mm yyyy');
-        expect(company.normalise_date('04 06 2026')).to.equal('2026-06-04');
+        expect(company.get_available_date_formats()).to.include('DD.MM.YYYY');
+        expect(company.get_default_date_format_for_date_picker()).to.equal('dd.mm.yyyy');
+        expect(company.normalise_date('04.06.2026')).to.equal('2026-06-04');
     });
 
 });

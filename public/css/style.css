@@ -147,7 +147,23 @@ td.leave_cell_pended {
   background: #FFCBA4;
   color: #61686b;
   font-weight: bolder; }
-
+.calendar-legend {
+  margin-top: 15px; }
+.calendar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 20px 10px 0; }
+.calendar-legend-swatch {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border: 1px solid #e5e5e5;
+  margin-right: 8px; }
+.calendar-legend-swatch.public-holiday {
+  background: #31B0D5; }
+.calendar-legend-swatch.pending-absence {
+  background: #FFCBA4; }
 .modal-dialog {
   max-width: 450px; }
 
