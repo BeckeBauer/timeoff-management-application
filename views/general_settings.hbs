@@ -37,13 +37,13 @@
                   </select>
                 </div>
               </div>
-              {{#if country_regions}}
-              <div class="form-group" id="company_region_group">
+              {{#if german_regions}}
+              <div class="form-group" id="company_region_group" {{#unless show_german_region_selector}}style="display: none;"{{/unless}}>
                 <label for="input_region" class="col-md-4 control-label">German state</label>
                 <div class="col-md-8">
                   <select class="form-control" id="input_region" name="region">
                     <option value="">Country-wide holidays only</option>
-                    {{#each country_regions}}
+                    {{#each german_regions}}
                     <option value="{{@key}}" {{#if_equal @key ../company.region}}selected="selected"{{/if_equal}}>{{this.name}}</option>
                     {{/each}}
                   </select>

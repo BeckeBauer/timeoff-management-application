@@ -4,9 +4,42 @@ const expect = require('chai').expect;
 const Promise = require('bluebird');
 const settingsRouter = require('../../../lib/route/settings');
 
+const generalSettingsHandler = settingsRouter.stack
+  .find(layer => layer.route && layer.route.path === '/general/' && layer.route.methods.get)
+  .route.stack[0].handle;
 const createLeaveTypeHandler = settingsRouter.stack
   .find(layer => layer.route && layer.route.path === '/leavetypes' && layer.route.methods.post)
   .route.stack[0].handle;
+
+describe('General settings route', function(){
+  it('provides German regions when the company is not yet set to Germany', async function(){
+    const company = {
+      country: 'US',
+      leave_types: [],
+      promise_schedule: () => Promise.resolve({}),
+    };
+    const req = {
+      user: {
+        getCompany: () => Promise.resolve(company),
+      },
+    };
+    let renderedView;
+    let renderedOptions;
+    const res = {
+      locals: {custom_java_script: [], custom_css: []},
+      render: (view, options) => {
+        renderedView = view;
+        renderedOptions = options;
+      },
+    };
+
+    await generalSettingsHandler(req, res);
+
+    expect(renderedView).to.equal('general_settings');
+    expect(renderedOptions.german_regions).to.have.property('HE');
+    expect(renderedOptions.show_german_region_selector).to.equal(false);
+  });
+});
 
 describe('Leave type creation route', function(){
   it('creates a leave type when optional form values are omitted', async function(){
