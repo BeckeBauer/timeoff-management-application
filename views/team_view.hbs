@@ -69,7 +69,7 @@
           <td>
             <span class="teamview-deducted-days"
               {{#if statistics }}
-              data-content="In {{as_date_formatted ../../base_date 'MMMM, YYYY' }} {{#with this.user }}{{this.full_name}} used {{../../statistics.deducted_days }} days from allowance{{/with}}"
+              data-content="{{#with this.user }}{{this.full_name}}: {{../../statistics.deducted_days }} days from allowance used in {{/with}}{{as_date_formatted ../../base_date 'MMMM, YYYY' }}"
               data-placement="right"
               data-toggle="popover"
               data-trigger="focus hover"
@@ -127,7 +127,7 @@
           <td>
             <span class="teamview-deducted-days"
               {{#if statistics }}
-              data-content="In {{as_date_formatted ../base_date 'MMMM, YYYY' }} {{# with this.user }}{{this.full_name}} used {{../statistics.deducted_days }} days from allowance{{/with}}"
+              data-content="{{# with this.user }}{{this.full_name}}: {{../statistics.deducted_days }} days from allowance used in {{/with}}{{as_date_formatted ../base_date 'MMMM, YYYY' }}"
               data-placement="right"
               data-toggle="popover"
               data-trigger="focus hover"

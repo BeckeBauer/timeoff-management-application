@@ -19,7 +19,7 @@
       <div
         class="progress-bar progress-bar-success"
         style="width: {{ leave_statistics.used_so_far_percent }}%"
-        data-content="{{# with employee }}{{this.full_name }}{{/with}} in current year used {{ leave_statistics.used_so_far }} days from allowance"
+        data-content="{{# with employee }}{{this.full_name }}: {{/with}}{{ leave_statistics.used_so_far }} days from allowance used in current year"
         data-placement="top"
         data-toggle="popover"
         data-trigger="focus hover"
@@ -29,7 +29,7 @@
       <div
         class="progress-bar progress-bar-warning"
         style="width: {{ leave_statistics.remaining_percent }}%"
-        data-content="{{# with employee }}{{this.full_name }}{{/with}} in current year has {{ leave_statistics.remaining }} remaining days in allowance"
+        data-content="{{# with employee }}{{this.full_name }}: {{/with}}{{ leave_statistics.remaining }} remaining days from allowance in current year"
         data-placement="top"
         data-toggle="popover"
         data-trigger="focus hover"

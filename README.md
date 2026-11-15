@@ -43,6 +43,10 @@ There are following types of users: employees, supervisors, and administrators.
 
 Optional LDAP authentication: configure application to use your LDAP server for user authentication.
 
+The interface is available in English and German. Users can select their preferred
+language in the navigation bar; the preference is saved with the user account.
+Run `npm run db-update` after upgrading to apply the database migration.
+
 **Ability to extract leave data into CSV**
 
 Ability to back up entire company leave data into CSV file. So it could be used in any spreadsheet applications.

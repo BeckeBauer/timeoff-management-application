@@ -8,12 +8,13 @@ var bodyParser   = require('body-parser');
 var moment       = require('moment');
 const createSessionMiddleware = require('./lib/middleware/withSession');
 const handlebarsRuntimeOptions = require('./lib/view/handlebars_runtime_options');
+const i18n = require('./lib/i18n');
 
 var app = express();
 
 // View engine setup
-var handlebars = require('express-handlebars')
-  .create({
+var handlebars = require('./lib/view/handlebars_engine')
+  .create_handlebars_engine({
     defaultLayout : 'main',
     extname       : '.hbs',
     helpers       : require('./lib/view/helpers')(),
@@ -64,6 +65,10 @@ app.use(function(req,res,next){
 
   res.locals.session     = req.session;
   res.locals.logged_user = req.user;
+  res.locals.language = i18n.normalizeLanguage(
+    (req.user && req.user.preferred_language) || req.session.language
+  );
+  res.locals.available_languages = i18n.languages;
   res.locals.url_to_the_site_root = '/';
   res.locals.requested_path = req.originalUrl;
   // For book leave request modal
@@ -93,6 +98,8 @@ app.use( require('./lib/middleware/flash_messages') );
 app.use( require('./lib/middleware/session_aware_redirect') );
 
 // Here will be publicly accessible routes
+
+app.use('/language/', require('./lib/route/language'));
 
 app.use(
   '/feed/',

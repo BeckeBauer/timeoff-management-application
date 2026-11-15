@@ -54,7 +54,48 @@ $(document).ready(function(){
     weekStart   : 1,
     format      : "dd/mm/yyyy"
   }
+
+  a.fn.datepicker.dates.de = {
+    days : [
+      "Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"
+    ],
+    daysShort : [
+      "So","Mo","Di","Mi","Do","Fr","Sa"
+    ],
+    daysMin : [
+      "So","Mo","Di","Mi","Do","Fr","Sa"
+    ],
+    months : [
+      "Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"
+    ],
+    monthsShort : [
+      "Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"
+    ],
+    today       : "Heute",
+    monthsTitle : "Monate",
+    clear       : "Löschen",
+    weekStart   : 1,
+    format      : "dd.mm.yyyy"
+  }
+
+  a.fn.datepicker.defaults.language =
+    document.documentElement.lang === 'de' ? 'de' : 'en-GB';
 }(jQuery);
+
+var translateUiText = function(text) {
+  if (document.documentElement.lang !== 'de') {
+    return text;
+  }
+
+  var translations = {
+    'Employee summary': 'Mitarbeiterübersicht',
+    'Leave summary': 'Abwesenheitsübersicht',
+    'Loading...': 'Wird geladen...',
+    'No notifications': 'Keine Benachrichtigungen',
+  };
+
+  return translations[text] || text;
+};
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
@@ -85,7 +126,8 @@ $('#add_secondary_supervisers_modal').on('show.bs.modal', function (event) {
 
   $(this).find(".modal-body")
     // Show "loading" icon while content of modal is loaded
-    .html('<p class="text-center"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></p>')
+    .html('<p class="text-center"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">'
+      + translateUiText('Loading...') + '</span></p>')
     .load('/settings/departments/available-supervisors/'+department_id+'/');
 });
 
@@ -171,7 +213,7 @@ $(document).ready(function(){
 
 $(document).ready(function(){
   $('.user-details-summary-trigger').popover({
-    title: 'Employee summary',
+    title: translateUiText('Employee summary'),
     html: true,
     trigger: 'hover',
     placement: 'auto',
@@ -190,13 +232,13 @@ $(document).ready(function(){
       }
     });
 
-    return '<div id="'+ divId +'">Loading...</div>';
+    return '<div id="'+ divId +'">' + translateUiText('Loading...') + '</div>';
   }
 });
 
 $(document).ready(function(){
   $('.leave-details-summary-trigger').popover({
-    title: 'Leave summary',
+    title: translateUiText('Leave summary'),
     html: true,
     trigger: 'hover',
     placement: 'auto',
@@ -214,7 +256,7 @@ $(document).ready(function(){
         $('#'+divId).html(response);
       }
     });
-    return '<div id="'+ divId +'">Loading...</div>';
+    return '<div id="'+ divId +'">' + translateUiText('Loading...') + '</div>';
   }
 });
 
@@ -238,7 +280,8 @@ $(document).ready(function() {
           if (!data || !data.length) {
             badge.addClass('hidden');
             dropDown.empty();
-            dropDown.append('<li class="dropdown-header">No notifications</li>')
+            dropDown.append('<li class="dropdown-header">'
+              + translateUiText('No notifications') + '</li>')
 
             document.title = document.title.replace(/\(\d+\)\s*/, '');
 

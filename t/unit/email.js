@@ -30,5 +30,42 @@ describe('Check Email', function(){
     });
 
   });
+
+  it('renders email subjects and bodies in the recipient preferred language', function(){
+    var email = new Email();
+
+    return email.promise_rendered_email_template({
+      template_name: 'foobar',
+      context: {
+        user: {
+          name: 'Mina',
+          preferred_language: 'de',
+          reload_with_session_details: function(){ return bluebird.resolve(1); },
+        },
+      },
+    }).then(function(rendered_email){
+      expect(rendered_email.subject).to.equal('E-Mail-Betreff hier einfügen');
+      expect(rendered_email.body).to.match(/Hallo Mina\./);
+      expect(rendered_email.body).not.to.contain('=====');
+    });
+  });
+
+  it('uses the actual recipient language when rendering a requestor email', function(){
+    var email = new Email();
+
+    return email.promise_rendered_email_template({
+      template_name: 'foobar',
+      context: {
+        user: {
+          name: 'Manager',
+          preferred_language: 'en',
+          reload_with_session_details: function(){ return bluebird.resolve(1); },
+        },
+        recipient: {preferred_language: 'de'},
+      },
+    }).then(function(rendered_email){
+      expect(rendered_email.subject).to.equal('E-Mail-Betreff hier einfügen');
+    });
+  });
 });
 
