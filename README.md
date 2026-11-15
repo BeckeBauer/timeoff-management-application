@@ -87,13 +87,13 @@ Requirements git and docker
 git clone BeckeBauer/timeoff-management-application timeoff-management
 cd timeoff-management
 docker build -t BeckeBauer/timeoff-management-application .
-docker run -d -p 3000:3000 --name alpine_timeoff BeckeBauer/timeoff-management-application
+docker run -d -p 3000:3000 --name timeoff-management BeckeBauer/timeoff-management-application
 ```
 Open http://localhost:3000/ in your browser.
 
-## How to?
+## Updates
 
-There are some customizations available.
+docker exec timeoff-management npm run db-update
 
 ## How to amend or extend colours available for colour picker?
 Follow instructions on [this page](docs/extend_colors_for_leave_type.md).
