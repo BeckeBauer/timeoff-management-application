@@ -76,3 +76,8 @@
       </dd>
     {{/ if}}
 </dl>
+{{#if user_allowance.excess_days}}
+  <p class="alert alert-warning" role="status">
+    {{ user_allowance.excess_days }} days of leave taken exceed the calculated German entitlement. Leave already taken remains recorded.
+  </p>
+{{/if}}
