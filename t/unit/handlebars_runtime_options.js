@@ -39,6 +39,7 @@ describe('Handlebars model access', function(){
       get email() { return 'user@example.com'; }
       get id() { return 9; }
       full_name() { return 'Example User'; }
+      get_reset_password_token() { return 'reset-token'; }
     }
 
     class Company {
@@ -77,6 +78,7 @@ describe('Handlebars model access', function(){
       + '{{allowance.number_of_days_available_in_allowance}}|'
       + '{{#if user.admin}}admin{{/if}}|'
       + '{{user.email}}|{{user.id}}|{{user.full_name}}|'
+      + '{{user.get_reset_password_token}}|'
       + '{{company.country}}|{{company.date_format}}|{{company.timezone}}|'
       + '{{#if company.share_all_absences}}shared{{/if}}|'
       + '{{#if company.is_team_view_hidden}}hidden{{else}}visible{{/if}}|'
@@ -100,7 +102,7 @@ describe('Handlebars model access', function(){
     }, runtimeOptions);
 
     expect(rendered).to.equal(
-      '1|2|3|4|true|5|6|7|8|admin|user@example.com|9|Example User|'
+      '1|2|3|4|true|5|6|7|8|admin|user@example.com|9|Example User|reset-token|'
       + 'GB|YYYY-MM-DD|Europe/London|shared|visible|YYYY-MM-DD|'
       + 'YYYY-MM-DD|Sales|9|9|Example User|1|20|yes|'
       + 'Annual leave|10|yes|blue'
