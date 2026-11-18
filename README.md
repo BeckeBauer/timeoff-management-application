@@ -93,7 +93,9 @@ Open http://localhost:3000/ in your browser.
 
 ## Updates
 
+```bash
 docker exec timeoff-management npm run db-update
+```
 
 ## How to amend or extend colours available for colour picker?
 Follow instructions on [this page](docs/extend_colors_for_leave_type.md).
