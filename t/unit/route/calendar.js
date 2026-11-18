@@ -73,5 +73,7 @@ describe('Calendar route', function(){
 
     expect(rendered.view).to.equal('feeds_list');
     expect(rendered.locals.current_origin).to.equal('https://calendar.example.com:8443');
+    expect(rendered.locals.calendar_feed.feed_token).to.equal('personal-token');
+    expect(rendered.locals.team_view_feed.feed_token).to.equal('team-token');
   });
 });
