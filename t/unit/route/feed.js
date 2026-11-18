@@ -80,6 +80,14 @@ describe('calendar feed event names', function() {
     }
   });
 
+  it('keeps event identifiers stable between feed refreshes', async function() {
+    const firstFeed = await fetchFeed('personal', this.feedModel);
+    const refreshedFeed = await fetchFeed('personal', this.feedModel);
+    const eventId = /UID:([^\r\n]+)/.exec(firstFeed)[1];
+
+    expect(/UID:([^\r\n]+)/.exec(refreshedFeed)[1]).to.equal(eventId);
+  });
+
   it('shows both leave types when morning and afternoon differ', async function() {
     day.leaveLabel = 'Annual Leave (morning) Sick Leave (afternoon)';
     try {
