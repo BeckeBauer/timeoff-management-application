@@ -8,6 +8,9 @@ const calendarRouter = require('../../../lib/route/calendar');
 const calendarHandler = calendarRouter.stack
   .find(layer => layer.route && layer.route.path === '/')
   .route.stack[0].handle;
+const calendarFeedsHandler = calendarRouter.stack
+  .find(layer => layer.route && layer.route.path === '/feeds/')
+  .route.stack[0].handle;
 
 describe('Calendar route', function(){
   it('uses the company date when no year is provided', async function(){
@@ -41,5 +44,34 @@ describe('Calendar route', function(){
       expect(locals.current_year).to.equal('2026');
       expect(calendarYear).to.equal('2026');
     });
+  });
+
+  it('builds an absolute feed address using the externally visible protocol and host', async function(){
+    const user = {
+      getFeeds: () => Promise.resolve([
+        {type: 'calendar', feed_token: 'personal-token'},
+        {type: 'teamview', feed_token: 'team-token'},
+      ]),
+    };
+
+    const rendered = await new global.Promise((resolve, reject) => {
+      try {
+        calendarFeedsHandler(
+          {
+            user,
+            protocol: 'http',
+            get: header => header === 'x-forwarded-proto'
+              ? 'https, http'
+              : 'calendar.example.com:8443',
+          },
+          {render: (view, locals) => resolve({view, locals})}
+        );
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    expect(rendered.view).to.equal('feeds_list');
+    expect(rendered.locals.current_origin).to.equal('https://calendar.example.com:8443');
   });
 });

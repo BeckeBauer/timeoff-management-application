@@ -50,11 +50,28 @@ describe('calendar feed event names', function() {
     promise_calendar: () => Promise.resolve([{as_for_team_view: () => [day]}]),
   };
 
-  function fetchFeed(token, model) {
+  function fetchFeedResponse(token, model) {
     return new global.Promise(resolve => {
-      handler({params: {token}, app: {get: () => model}}, {send: resolve});
+      let contentType;
+      const response = {
+        set: (name, value) => {
+          if (name.toLowerCase() === 'content-type') contentType = value;
+          return response;
+        },
+        send: body => resolve({body, contentType}),
+      };
+      handler({params: {token}, app: {get: () => model}}, response);
     });
   }
+
+  function fetchFeed(token, model) {
+    return fetchFeedResponse(token, model).then(({body}) => body);
+  }
+
+  it('serves the feed with the calendar MIME type', async function() {
+    const response = await fetchFeedResponse('personal', this.feedModel);
+    expect(response.contentType).to.equal('text/calendar; charset=utf-8');
+  });
 
   it('includes the leave type in personal and team calendar feeds', async function() {
     for (const token of ['personal', 'team']) {
